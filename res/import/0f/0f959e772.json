@@ -1,0 +1,80 @@
+[
+  [
+    {
+      "__type__": "cc.Prefab",
+      "_name": "1",
+      "data": {
+        "__id__": 1
+      }
+    },
+    {
+      "__type__": "cc.Node",
+      "_name": "1",
+      "_components": [
+        {
+          "__type__": "cc.Sprite",
+          "node": {
+            "__id__": 1
+          },
+          "_spriteFrame": {
+            "__uuid__": "fdN2MhgP9LWYkFqpC0ZIl6"
+          }
+        },
+        {
+          "__type__": "509d5QAiFBE+5uDyW7DAhR9",
+          "node": {
+            "__id__": 1
+          }
+        }
+      ],
+      "_prefab": {
+        "__type__": "cc.PrefabInfo",
+        "root": {
+          "__id__": 1
+        },
+        "asset": {
+          "__uuid__": "261nKf7IRG9IVGe/hs09gM"
+        },
+        "fileId": "fe1y66XzZBTrOAQ1PqzjPW"
+      },
+      "_contentSize": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 600
+      },
+      "_scale": {
+        "__type__": "cc.Vec3",
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  ],
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "1",
+      "texture": "f3JuOnOt5JnZxIJ16YkA8o",
+      "rect": [
+        0,
+        0,
+        600,
+        600
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "originalSize": [
+        600,
+        600
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]

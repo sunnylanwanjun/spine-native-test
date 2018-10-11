@@ -1,0 +1,8 @@
+{
+    "ndk_module_path" :[
+        "/Users/mac/Documents/cocos2d-x-lite/cocos2d-x-lite",
+        "/Users/mac/Documents/cocos2d-x-lite/cocos2d-x-lite/cocos",
+        "/Users/mac/Documents/cocos2d-x-lite/cocos2d-x-lite/external"
+    ],
+    "copy_resources": []
+}

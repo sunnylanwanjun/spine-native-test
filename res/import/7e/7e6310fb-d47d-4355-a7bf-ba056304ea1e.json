@@ -1,0 +1,1196 @@
+{
+  "__type__": "sp.SkeletonData",
+  "_name": "effect_003",
+  "_native": "raw-skeleton.json",
+  "_skeletonJson": {
+    "skeleton": {
+      "hash": "OV6sqw1vGqeJkD6geGDx0KK2XRE",
+      "spine": "3.6.50",
+      "width": 0,
+      "height": 0,
+      "images": ""
+    },
+    "bones": [
+      {
+        "name": "root"
+      },
+      {
+        "name": "0.51",
+        "parent": "root",
+        "scaleX": 0.51,
+        "scaleY": 0.51
+      },
+      {
+        "name": "TX",
+        "parent": "0.51",
+        "scaleX": 1.1,
+        "scaleY": 1.1
+      },
+      {
+        "name": "FS",
+        "parent": "TX"
+      },
+      {
+        "name": "bd",
+        "parent": "FS"
+      },
+      {
+        "name": "c",
+        "parent": "FS",
+        "x": 12.47
+      },
+      {
+        "name": "d",
+        "parent": "bd"
+      },
+      {
+        "name": "fw",
+        "parent": "bd"
+      },
+      {
+        "name": "gx",
+        "parent": "FS"
+      },
+      {
+        "name": "lz",
+        "parent": "FS"
+      },
+      {
+        "name": "q",
+        "parent": "bd"
+      },
+      {
+        "name": "z",
+        "parent": "bd"
+      }
+    ],
+    "slots": [
+      {
+        "name": "战斗场景BJ",
+        "bone": "FS"
+      },
+      {
+        "name": "光线_00000",
+        "bone": "gx",
+        "blend": "additive"
+      },
+      {
+        "name": "粒子_00000",
+        "bone": "lz",
+        "blend": "additive"
+      },
+      {
+        "name": "c_00000",
+        "bone": "c",
+        "blend": "additive"
+      },
+      {
+        "name": "aoe_splatterran2_orange_1_00000",
+        "bone": "q",
+        "blend": "additive"
+      },
+      {
+        "name": "flare2b_orange_00000",
+        "bone": "z",
+        "blend": "additive"
+      },
+      {
+        "name": "glow_hot_yellow1_00000",
+        "bone": "d",
+        "blend": "additive"
+      },
+      {
+        "name": "heroes_triforce1_purple",
+        "bone": "fw",
+        "color": "fcdf00ff",
+        "blend": "additive"
+      }
+    ],
+    "skins": {
+      "default": {
+        "aoe_splatterran2_orange_1_00000": {
+          "aoe_splatterran2_orange_1_00000": {
+            "width": 256,
+            "height": 256
+          }
+        },
+        "c_00000": {
+          "c_00000": {
+            "x": -215.43,
+            "width": 500,
+            "height": 360
+          }
+        },
+        "flare2b_orange_00000": {
+          "flare2b_orange_00000": {
+            "width": 256,
+            "height": 256
+          }
+        },
+        "glow_hot_yellow1_00000": {
+          "glow_hot_yellow1_00000": {
+            "width": 128,
+            "height": 128
+          }
+        },
+        "heroes_triforce1_purple": {
+          "heroes_triforce1_purple": {
+            "color": "ffb100ff",
+            "x": 2.11,
+            "y": -2.08,
+            "scaleX": 1.2,
+            "scaleY": 1.2,
+            "width": 256,
+            "height": 256
+          }
+        },
+        "光线_00000": {
+          "光线_00000": {
+            "x": 132.35,
+            "width": 320,
+            "height": 100
+          }
+        },
+        "粒子_00000": {
+          "粒子_00000": {
+            "x": 65.82,
+            "width": 240,
+            "height": 210
+          }
+        }
+      }
+    },
+    "animations": {
+      "collapse": {},
+      "hit_1": {
+        "slots": {
+          "flare2b_orange_00000": {
+            "attachment": [
+              {
+                "time": 0.7667,
+                "name": "flare2b_orange_00000"
+              }
+            ]
+          },
+          "glow_hot_yellow1_00000": {
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "glow_hot_yellow1_00000"
+              },
+              {
+                "time": 1.2333,
+                "name": null
+              }
+            ]
+          },
+          "光线_00000": {
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "光线_00000"
+              }
+            ]
+          },
+          "粒子_00000": {
+            "color": [
+              {
+                "time": 0.8,
+                "color": "ffffffff",
+                "curve": "stepped"
+              },
+              {
+                "time": 0.8333,
+                "color": "ffffffff"
+              },
+              {
+                "time": 0.9,
+                "color": "ffffff00"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "粒子_00000"
+              }
+            ]
+          }
+        },
+        "bones": {
+          "gx": {
+            "rotate": [
+              {
+                "time": 0.7333,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7333,
+                "x": 105.35,
+                "y": 121.98
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 0.4,
+                "y": 1
+              },
+              {
+                "time": 0.7667,
+                "x": 0.9,
+                "y": 1
+              },
+              {
+                "time": 0.8667,
+                "x": 1,
+                "y": 0
+              }
+            ]
+          },
+          "lz": {
+            "rotate": [
+              {
+                "time": 0.7333,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7333,
+                "x": 101.36,
+                "y": 121.93
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 0.6,
+                "y": 0.5
+              },
+              {
+                "time": 0.8,
+                "x": 1.2,
+                "y": 1
+              },
+              {
+                "time": 0.9,
+                "x": 1.5,
+                "y": 1.2
+              }
+            ]
+          },
+          "bd": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 65.03,
+                "y": 74.6
+              },
+              {
+                "time": 0.6667,
+                "x": 110.93,
+                "y": 127.25
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 0.59,
+                "y": 1
+              },
+              {
+                "time": 0.6667,
+                "x": 0.3,
+                "y": 1
+              }
+            ]
+          },
+          "z": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 0.575,
+                "y": 0.575
+              },
+              {
+                "time": 0.7667,
+                "x": 0.4,
+                "y": 0.4
+              },
+              {
+                "time": 0.8,
+                "x": 1.5,
+                "y": 1.5
+              },
+              {
+                "time": 0.8667,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "d": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 1.531,
+                "y": 0.851
+              },
+              {
+                "time": 0.7667,
+                "x": 3,
+                "y": 2
+              },
+              {
+                "time": 0.8667,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "FS": {
+            "rotate": [
+              {
+                "time": 0.7,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7,
+                "x": 13.43,
+                "y": 10.28
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "root": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "0.51": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "TX": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          }
+        }
+      },
+      "hit_2": {
+        "slots": {
+          "flare2b_orange_00000": {
+            "attachment": [
+              {
+                "time": 0.7667,
+                "name": "flare2b_orange_00000"
+              }
+            ]
+          },
+          "glow_hot_yellow1_00000": {
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "glow_hot_yellow1_00000"
+              },
+              {
+                "time": 1.2333,
+                "name": null
+              }
+            ]
+          },
+          "光线_00000": {
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "光线_00000"
+              }
+            ]
+          },
+          "粒子_00000": {
+            "color": [
+              {
+                "time": 0.8,
+                "color": "ffffffff",
+                "curve": "stepped"
+              },
+              {
+                "time": 0.8333,
+                "color": "ffffffff"
+              },
+              {
+                "time": 0.9,
+                "color": "ffffff00"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 0.7333,
+                "name": "粒子_00000"
+              }
+            ]
+          }
+        },
+        "bones": {
+          "gx": {
+            "rotate": [
+              {
+                "time": 0.7333,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7333,
+                "x": 105.35,
+                "y": 121.98
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 0.4,
+                "y": 1
+              },
+              {
+                "time": 0.7667,
+                "x": 0.9,
+                "y": 1
+              },
+              {
+                "time": 0.8667,
+                "x": 1,
+                "y": 0
+              }
+            ]
+          },
+          "lz": {
+            "rotate": [
+              {
+                "time": 0.7333,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7333,
+                "x": 101.36,
+                "y": 121.93
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 0.6,
+                "y": 0.5
+              },
+              {
+                "time": 0.8,
+                "x": 1.2,
+                "y": 1
+              },
+              {
+                "time": 0.9,
+                "x": 1.5,
+                "y": 1.2
+              }
+            ]
+          },
+          "bd": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 65.03,
+                "y": 74.6
+              },
+              {
+                "time": 0.6667,
+                "x": 110.93,
+                "y": 127.25
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 0.59,
+                "y": 1
+              },
+              {
+                "time": 0.6667,
+                "x": 0.3,
+                "y": 1
+              }
+            ]
+          },
+          "z": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 0.575,
+                "y": 0.575
+              },
+              {
+                "time": 0.7667,
+                "x": 0.4,
+                "y": 0.4
+              },
+              {
+                "time": 0.8,
+                "x": 1.5,
+                "y": 1.5
+              },
+              {
+                "time": 0.8667,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "d": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7333,
+                "x": 1.531,
+                "y": 0.851
+              },
+              {
+                "time": 0.7667,
+                "x": 3,
+                "y": 2
+              },
+              {
+                "time": 0.8667,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "FS": {
+            "rotate": [
+              {
+                "time": 0.7,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.7,
+                "x": 13.43,
+                "y": 10.28
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.7,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "root": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "0.51": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "TX": {
+            "rotate": [
+              {
+                "time": 0.2667,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.2667,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.2667,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          }
+        }
+      },
+      "hurt": {},
+      "idle": {},
+      "run": {},
+      "sk_2": {
+        "slots": {
+          "aoe_splatterran2_orange_1_00000": {
+            "color": [
+              {
+                "time": 1.4667,
+                "color": "ffffffff"
+              },
+              {
+                "time": 1.5333,
+                "color": "ffffff00"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 1.3333,
+                "name": "aoe_splatterran2_orange_1_00000"
+              }
+            ]
+          },
+          "c_00000": {
+            "color": [
+              {
+                "time": 1.4667,
+                "color": "ffffffff"
+              },
+              {
+                "time": 1.6,
+                "color": "ffffff00"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 1.4333,
+                "name": "c_00000"
+              }
+            ]
+          },
+          "flare2b_orange_00000": {
+            "attachment": [
+              {
+                "time": 1.4333,
+                "name": "flare2b_orange_00000"
+              }
+            ]
+          },
+          "glow_hot_yellow1_00000": {
+            "attachment": [
+              {
+                "time": 0.4,
+                "name": "glow_hot_yellow1_00000"
+              },
+              {
+                "time": 0.5,
+                "name": null
+              },
+              {
+                "time": 1.4,
+                "name": "glow_hot_yellow1_00000"
+              },
+              {
+                "time": 1.9,
+                "name": null
+              }
+            ]
+          },
+          "heroes_triforce1_purple": {
+            "color": [
+              {
+                "time": 1.4333,
+                "color": "fcdf00ff"
+              },
+              {
+                "time": 1.6333,
+                "color": "fcdf0000"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 1.4333,
+                "name": "heroes_triforce1_purple"
+              }
+            ]
+          },
+          "光线_00000": {
+            "attachment": [
+              {
+                "time": 1.4,
+                "name": "光线_00000"
+              }
+            ]
+          },
+          "粒子_00000": {
+            "color": [
+              {
+                "time": 0.4333,
+                "color": "ffffffff"
+              },
+              {
+                "time": 0.5333,
+                "color": "ffffff00"
+              },
+              {
+                "time": 1.5,
+                "color": "ffffffff",
+                "curve": "stepped"
+              },
+              {
+                "time": 1.5667,
+                "color": "ffffffff"
+              },
+              {
+                "time": 1.6667,
+                "color": "ffffff00"
+              }
+            ],
+            "attachment": [
+              {
+                "time": 0.4,
+                "name": "粒子_00000"
+              },
+              {
+                "time": 0.5333,
+                "name": null
+              },
+              {
+                "time": 1.4333,
+                "name": "粒子_00000"
+              }
+            ]
+          }
+        },
+        "bones": {
+          "gx": {
+            "translate": [
+              {
+                "time": 1.4,
+                "x": 105.35,
+                "y": 121.98
+              }
+            ],
+            "scale": [
+              {
+                "time": 1.4,
+                "x": 0.32,
+                "y": 1
+              },
+              {
+                "time": 1.4333,
+                "x": 1.298,
+                "y": 1
+              },
+              {
+                "time": 1.5333,
+                "x": 1.298,
+                "y": 0
+              }
+            ]
+          },
+          "lz": {
+            "rotate": [
+              {
+                "time": 0.4,
+                "angle": 90,
+                "curve": "stepped"
+              },
+              {
+                "time": 0.5333,
+                "angle": 90
+              },
+              {
+                "time": 1.4333,
+                "angle": 0
+              }
+            ],
+            "translate": [
+              {
+                "time": 0.4,
+                "x": 84,
+                "y": 4.5,
+                "curve": "stepped"
+              },
+              {
+                "time": 0.5333,
+                "x": 84,
+                "y": 4.5
+              },
+              {
+                "time": 1.4333,
+                "x": 99.27,
+                "y": 121.93
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.4,
+                "x": 0.634,
+                "y": 0.649
+              },
+              {
+                "time": 0.5333,
+                "x": 0.752,
+                "y": 0.762
+              },
+              {
+                "time": 1.4333,
+                "x": 1,
+                "y": 1
+              },
+              {
+                "time": 1.5,
+                "x": 1.35,
+                "y": 1.35
+              },
+              {
+                "time": 1.6667,
+                "x": 1.5,
+                "y": 1.5
+              }
+            ]
+          },
+          "c": {
+            "translate": [
+              {
+                "time": 1.4333,
+                "x": 108.22,
+                "y": 119.24
+              }
+            ],
+            "scale": [
+              {
+                "time": 1.4333,
+                "x": 0.3,
+                "y": 0.6
+              },
+              {
+                "time": 1.4667,
+                "x": 0.4,
+                "y": 1
+              },
+              {
+                "time": 1.6,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "q": {
+            "translate": [
+              {
+                "time": 1.3333,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 1.3333,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "time": 1.4,
+                "x": 0.571,
+                "y": 0.571
+              },
+              {
+                "time": 1.5333,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "bd": {
+            "translate": [
+              {
+                "time": 1.3333,
+                "x": 110.93,
+                "y": 127.25
+              }
+            ],
+            "scale": [
+              {
+                "time": 1.3333,
+                "x": 0.3,
+                "y": 1
+              }
+            ]
+          },
+          "z": {
+            "scale": [
+              {
+                "time": 1.4333,
+                "x": 0.2,
+                "y": 0.2
+              },
+              {
+                "time": 1.4667,
+                "x": 1,
+                "y": 1
+              },
+              {
+                "time": 1.5333,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "d": {
+            "translate": [
+              {
+                "time": 0.4,
+                "x": 80,
+                "y": 0,
+                "curve": "stepped"
+              },
+              {
+                "time": 0.5333,
+                "x": 80,
+                "y": 0
+              },
+              {
+                "time": 1.4,
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 0.4,
+                "x": 0.761,
+                "y": 0.5
+              },
+              {
+                "time": 0.4333,
+                "x": 1,
+                "y": 0.545
+              },
+              {
+                "time": 0.5333,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "time": 1.4,
+                "x": 1,
+                "y": 1
+              },
+              {
+                "time": 1.4333,
+                "x": 4,
+                "y": 4
+              },
+              {
+                "time": 1.6,
+                "x": 0,
+                "y": 0
+              }
+            ]
+          },
+          "fw": {
+            "rotate": [
+              {
+                "time": 1.4333,
+                "angle": 0
+              },
+              {
+                "time": 1.6667,
+                "angle": 164.32
+              }
+            ],
+            "translate": [
+              {
+                "time": 1.4333,
+                "x": 3.01,
+                "y": 0
+              }
+            ],
+            "scale": [
+              {
+                "time": 1.4333,
+                "x": 1,
+                "y": 1
+              }
+            ]
+          },
+          "FS": {
+            "translate": [
+              {
+                "time": 1.3667,
+                "x": 29.06,
+                "y": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "_atlasText": "\neffect_003.png\nsize: 268,507\nformat: RGBA8888\nfilter: Linear,Linear\nrepeat: none\naoe_splatterran2_orange_1_00000\n  rotate: false\n  xy: 2, 188\n  size: 131, 131\n  orig: 131, 131\n  offset: 0, 0\n  index: -1\nc_00000\n  rotate: false\n  xy: 2, 321\n  size: 255, 184\n  orig: 255, 184\n  offset: 0, 0\n  index: -1\nflare2b_orange_00000\n  rotate: false\n  xy: 135, 188\n  size: 131, 131\n  orig: 131, 131\n  offset: 0, 0\n  index: -1\nglow_hot_yellow1_00000\n  rotate: false\n  xy: 167, 12\n  size: 65, 65\n  orig: 65, 65\n  offset: 0, 0\n  index: -1\nheroes_triforce1_purple\n  rotate: false\n  xy: 2, 55\n  size: 131, 131\n  orig: 131, 131\n  offset: 0, 0\n  index: -1\n光线_00000\n  rotate: false\n  xy: 2, 2\n  size: 163, 51\n  orig: 163, 51\n  offset: 0, 0\n  index: -1\n粒子_00000\n  rotate: false\n  xy: 135, 79\n  size: 122, 107\n  orig: 122, 107\n  offset: 0, 0\n  index: -1\n",
+  "textures": [
+    {
+      "__uuid__": "727cRpVydMibMjq+hvkbk6"
+    }
+  ],
+  "textureNames": [
+    "effect_003.png"
+  ]
+}
