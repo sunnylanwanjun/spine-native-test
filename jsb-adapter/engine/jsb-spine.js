@@ -24,476 +24,163 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-const TrackEntryListeners = require('./track-entry-listeners');
-const RenderComponent = require('../../cocos2d/core/components/CCRenderComponent');
-const spine = require('./lib/spine');
-const SpriteMaterial = require('../../cocos2d/core/renderer/render-engine').SpriteMaterial;
-const Graphics = require('../../cocos2d/core/graphics/graphics');
-
-/**
- * @module sp
- */
-let DefaultSkinsEnum = cc.Enum({ 'default': -1 });
-let DefaultAnimsEnum = cc.Enum({ '<None>': 0 });
-
-function setEnumAttr (obj, propName, enumDef) {
-    cc.Class.attr(obj, propName, {
-        type: 'Enum',
-        enumList: cc.Enum.getList(enumDef)
-    });
-}
-
 jsbSkeleton = sp.Skeleton;
 
-/**
- * !#en
- * Sets runtime skeleton data to sp.Skeleton.<br>
- * This method is different from the `skeletonData` property. This method is passed in the raw data provided by the Spine runtime, and the skeletonData type is the asset type provided by Creator.
- * !#zh
- * 设置底层运行时用到的 SkeletonData。<br>
- * 这个接口有别于 `skeletonData` 属性，这个接口传入的是 Spine runtime 提供的原始数据，而 skeletonData 的类型是 Creator 提供的资源类型。
- * @method setSkeletonData
- * @param {sp.spine.SkeletonData} skeletonData
- */
-jsbSkeleton.prototype.setSkeletonData = function(skeletonData) {
+jsbSkeleton.prototype.setSkeletonData = function (skeletonData) {
     if (skeletonData.width != null && skeletonData.height != null) {
         this.node.setContentSize(skeletonData.width, skeletonData.height);
     }
 
-    this._skeleton = new spine.Skeleton(skeletonData);
-    // this._skeleton.updateWorldTransform();
-    this._rootBone = this._skeleton.getRootBone();
-},
-
-/**
- * !#en Sets animation state data.<br>
- * The parameter type is {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.AnimationStateData.
- * !#zh 设置动画状态数据。<br>
- * 参数是 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.AnimationStateData。
- * @method setAnimationStateData
- * @param {sp.spine.AnimationStateData} stateData
- */
-setAnimationStateData (stateData) {
-    var state = new spine.AnimationState(stateData);
-    if (this._listener) {
-        if (this._state) {
-            this._state.removeListener(this._listener);
-        }
-        state.addListener(this._listener);
+    var uuid = skeletonData._uuid;
+    if ( !uuid ) {
+        cc.errorID(7504);
+        return;
     }
-    this._state = state;
-},
-
-// IMPLEMENT
-__preload () {
-    if (CC_EDITOR) {
-        var Flags = cc.Object.Flags;
-        this._objFlags |= (Flags.IsAnchorLocked | Flags.IsSizeLocked);
-        
-        this._refreshInspector();
+    var jsonFile = cc.loader.md5Pipe ? cc.loader.md5Pipe.transformURL(skeletonData.nativeUrl, true) : skeletonData.nativeUrl;
+    var atlasText = skeletonData.atlasText;
+    if (!atlasText) {
+        cc.errorID(7508, skeletonData.name);
+        return;
+    }
+    var texValues = skeletonData.textures;
+    var texKeys = skeletonData.textureNames;
+    if ( !(texValues && texValues.length > 0 && texKeys && texKeys.length > 0) ) {
+        cc.errorID(7507, skeletonData.name);
+        return;
+    }
+    var textures = {};
+    for (var i = 0; i < texValues.length; ++i) {
+        textures[texKeys[i]] = texValues[i];
     }
 
-    this._updateSkeletonData();
-},
-
-update (dt) {
-    if (CC_EDITOR) return;
-    let skeleton = this._skeleton;
-    let state = this._state;
-    if (skeleton) {
-        skeleton.update(dt);
-        if (state) {
-            dt *= this.timeScale;
-            state.update(dt);
-            state.apply(skeleton);
-        }
+    var skeletonAni = new sp.SkeletonAnimation();
+    try {
+        sp._initSkeletonRenderer(skeletonAni, jsonFile, atlasText, textures, skeletonData.scale);
     }
-},
-
-onRestore () {
-    // Destroyed and restored in Editor
-    if (!this._material) {
-        this._boundingBox = cc.rect();
-        this._material = new SpriteMaterial();
-        this._renderDatas = [];
+    catch (e) {
+        cc._throw(e);
+        return;
     }
-},
+    this._skeleton = skeletonAni;
+}
 
-onDestroy () {
-    this._super();
-    // Render datas will be destroyed automatically by RenderComponent.onDestroy
-    this._renderDatas.length = 0;
-},
+jsbSkeleton.prototype.setAnimationStateData = function (stateData) {
+    this._skeleton.setAnimationStateData(stateData);
+}
 
-// _getLocalBounds: CC_EDITOR && function (out_rect) {
-//     var rect = this._boundingBox;
-//     out_rect.x = rect.x;
-//     out_rect.y = rect.y;
-//     out_rect.width = rect.width;
-//     out_rect.height = rect.height;
-// },
-
-// RENDERER
-
-/**
- * !#en Computes the world SRT from the local SRT for each bone.
- * !#zh 重新更新所有骨骼的世界 Transform，
- * 当获取 bone 的数值未更新时，即可使用该函数进行更新数值。
- * @method updateWorldTransform
- * @example
- * var bone = spine.findBone('head');
- * cc.log(bone.worldX); // return 0;
- * spine.updateWorldTransform();
- * bone = spine.findBone('head');
- * cc.log(bone.worldX); // return -23.12;
- */
-updateWorldTransform () {
+jsbSkeleton.prototype.update = function (dt) {
     if (this._skeleton) {
-        this._skeleton.updateWorldTransform();
+        this._skeleton.update(dt*this.timeScale);
     }
-},
+}
 
-/**
- * !#en Sets the bones and slots to the setup pose.
- * !#zh 还原到起始动作
- * @method setToSetupPose
- */
-setToSetupPose () {
+jsbSkeleton.prototype.setSkin = function (skinName) {
     if (this._skeleton) {
-        this._skeleton.setToSetupPose();
-    }
-},
-
-/**
- * !#en
- * Sets the bones to the setup pose,
- * using the values from the `BoneData` list in the `SkeletonData`.
- * !#zh
- * 设置 bone 到起始动作
- * 使用 SkeletonData 中的 BoneData 列表中的值。
- * @method setBonesToSetupPose
- */
-setBonesToSetupPose () {
-    if (this._skeleton) {
-        this._skeleton.setBonesToSetupPose();
-    }
-},
-
-/**
- * !#en
- * Sets the slots to the setup pose,
- * using the values from the `SlotData` list in the `SkeletonData`.
- * !#zh
- * 设置 slot 到起始动作。
- * 使用 SkeletonData 中的 SlotData 列表中的值。
- * @method setSlotsToSetupPose
- */
-setSlotsToSetupPose () {
-    if (this._skeleton) {
-        this._skeleton.setSlotsToSetupPose();
-    }
-},
-
-/**
- * !#en
- * Finds a bone by name.
- * This does a string comparison for every bone.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Bone object.
- * !#zh
- * 通过名称查找 bone。
- * 这里对每个 bone 的名称进行了对比。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Bone 对象。
- *
- * @method findBone
- * @param {String} boneName
- * @return {sp.spine.Bone}
- */
-findBone (boneName) {
-    if (this._skeleton) {
-        return this._skeleton.findBone(boneName);
+        return this._skeleton.setSkin(skinName);
     }
     return null;
-},
+}
 
-/**
- * !#en
- * Finds a slot by name. This does a string comparison for every slot.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Slot object.
- * !#zh
- * 通过名称查找 slot。这里对每个 slot 的名称进行了比较。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Slot 对象。
- *
- * @method findSlot
- * @param {String} slotName
- * @return {sp.spine.Slot}
- */
-findSlot (slotName) {
+jsbSkeleton.prototype.getAttachment = function (slotName, attachmentName) {
     if (this._skeleton) {
-        return this._skeleton.findSlot(slotName);
+        return this._skeleton.getAttachment(slotName, attachmentName);
     }
     return null;
-},
+}
 
-/**
- * !#en
- * Finds a skin by name and makes it the active skin.
- * This does a string comparison for every skin.<br>
- * Note that setting the skin does not change which attachments are visible.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Skin object.
- * !#zh
- * 按名称查找皮肤，激活该皮肤。这里对每个皮肤的名称进行了比较。<br>
- * 注意：设置皮肤不会改变 attachment 的可见性。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Skin 对象。
- *
- * @method setSkin
- * @param {String} skinName
- * @return {sp.spine.Skin}
- */
-setSkin (skinName) {
+jsbSkeleton.prototype.setMix = function (fromAnimation, toAnimation, duration) {
     if (this._skeleton) {
-        return this._skeleton.setSkinByName(skinName);
+        this._skeleton.setMix(fromAnimation, toAnimation, duration);
     }
-    return null;
-},
+}
 
-/**
- * !#en
- * Returns the attachment for the slot and attachment name.
- * The skeleton looks first in its skin, then in the skeleton data’s default skin.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Attachment object.
- * !#zh
- * 通过 slot 和 attachment 的名称获取 attachment。Skeleton 优先查找它的皮肤，然后才是 Skeleton Data 中默认的皮肤。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.Attachment 对象。
- *
- * @method getAttachment
- * @param {String} slotName
- * @param {String} attachmentName
- * @return {sp.spine.Attachment}
- */
-getAttachment (slotName, attachmentName) {
+jsbSkeleton.prototype.setAnimation = function (trackIndex, name, loop) {
     if (this._skeleton) {
-        return this._skeleton.getAttachmentByName(slotName, attachmentName);
-    }
-    return null;
-},
-
-/**
- * !#en
- * Sets the attachment for the slot and attachment name.
- * The skeleton looks first in its skin, then in the skeleton data’s default skin.
- * !#zh
- * 通过 slot 和 attachment 的名字来设置 attachment。
- * Skeleton 优先查找它的皮肤，然后才是 Skeleton Data 中默认的皮肤。
- * @method setAttachment
- * @param {String} slotName
- * @param {String} attachmentName
- */
-setAttachment (slotName, attachmentName) {
-    if (this._skeleton) {
-        this._skeleton.setAttachment(slotName, attachmentName);
-    }
-},
-
-/**
-* Return the renderer of attachment.
-* @method getTextureAtlas
-* @param {sp.spine.RegionAttachment|spine.BoundingBoxAttachment} regionAttachment
-* @return {sp.spine.TextureAtlasRegion}
-*/
-getTextureAtlas (regionAttachment) {
-    return regionAttachment.region;
-},
-
-// ANIMATION
-/**
- * !#en
- * Mix applies all keyframe values,
- * interpolated for the specified time and mixed with the current values.
- * !#zh 为所有关键帧设定混合及混合时间（从当前值开始差值）。
- * @method setMix
- * @param {String} fromAnimation
- * @param {String} toAnimation
- * @param {Number} duration
- */
-setMix (fromAnimation, toAnimation, duration) {
-    if (this._state) {
-        this._state.data.setMix(fromAnimation, toAnimation, duration);
-    }
-},
-
-/**
- * !#en Set the current animation. Any queued animations are cleared.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry object.
- * !#zh 设置当前动画。队列中的任何的动画将被清除。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry 对象。
- * @method setAnimation
- * @param {Number} trackIndex
- * @param {String} name
- * @param {Boolean} loop
- * @return {sp.spine.TrackEntry}
- */
-setAnimation (trackIndex, name, loop) {
-    if (this._skeleton) {
-        var animation = this._skeleton.data.findAnimation(name);
-        if (!animation) {
-            cc.logID(7509, name);
-            return null;
-        }
-        var res = this._state.setAnimationWith(trackIndex, animation, loop);
-        if (CC_EDITOR && !cc.engine.isPlaying) {
-            this._state.update(0);
-            this._state.apply(this._skeleton);
-        }
+        var res = this._skeleton.setAnimation(trackIndex, name, loop);
         return res;
     }
     return null;
-},
+}
 
-/**
- * !#en Adds an animation to be played delay seconds after the current or last queued animation.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry object.
- * !#zh 添加一个动画到动画队列尾部，还可以延迟指定的秒数。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry 对象。
- * @method addAnimation
- * @param {Number} trackIndex
- * @param {String} name
- * @param {Boolean} loop
- * @param {Number} [delay=0]
- * @return {sp.spine.TrackEntry}
- */
-addAnimation (trackIndex, name, loop, delay) {
+jsbSkeleton.prototype.addAnimation = function (trackIndex, name, loop, delay) {
     if (this._skeleton) {
-        delay = delay || 0;
-        var animation = this._skeleton.data.findAnimation(name);
-        if (!animation) {
-            cc.logID(7510, name);
-            return null;
-        }
-        return this._state.addAnimationWith(trackIndex, animation, loop, delay);
+        return this._skeleton.addAnimation(trackIndex, name, loop, delay || 0);
     }
     return null;
-},
+}
 
-/**
- * !#en Find animation with specified name.
- * !#zh 查找指定名称的动画
- * @method findAnimation
- * @param {String} name
- * @returns {sp.spine.Animation}
- */
-findAnimation (name) {
+jsbSkeleton.prototype.findAnimation = function (name) {
     if (this._skeleton) {
-        return this._skeleton.data.findAnimation(name);
+        return this._skeleton.findAnimation(name);
     }
     return null;
-},
+}
 
-/**
- * !#en Returns track entry by trackIndex.<br>
- * Returns a {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry object.
- * !#zh 通过 track 索引获取 TrackEntry。<br>
- * 返回一个 {{#crossLinkModule "sp.spine"}}sp.spine{{/crossLinkModule}}.TrackEntry 对象。
- * @method getCurrent
- * @param trackIndex
- * @return {sp.spine.TrackEntry}
- */
-getCurrent (trackIndex) {
-    if (this._state) {
-        return this._state.getCurrent(trackIndex);
+jsbSkeleton.prototype.getCurrent = function (trackIndex) {
+    if (this._skeleton) {
+        return this._skeleton.getCurrent(trackIndex);
     }
     return null;
-},
+}
 
-/**
- * !#en Clears all tracks of animation state.
- * !#zh 清除所有 track 的动画状态。
- * @method clearTracks
- */
-clearTracks () {
-    if (this._state) {
-        this._state.clearTracks();
+jsbSkeleton.prototype.clearTracks = function () {
+    if (this._skeleton) {
+        this._skeleton.clearTracks();
     }
-},
+}
 
-/**
- * !#en Clears track of animation state by trackIndex.
- * !#zh 清除出指定 track 的动画状态。
- * @method clearTrack
- * @param {number} trackIndex
- */
-clearTrack (trackIndex) {
-    if (this._state) {
-        this._state.clearTrack(trackIndex);
-        if (CC_EDITOR && !cc.engine.isPlaying) {
-            this._state.update(0);
-        }
+jsbSkeleton.prototype.clearTrack = function (trackIndex) {
+    if (this._skeleton) {
+        this._skeleton.clearTrack(trackIndex);
     }
-},
+}
 
-/**
- * !#en Set the start event listener.
- * !#zh 用来设置开始播放动画的事件监听。
- * @method setStartListener
- * @param {function} listener
- */
-setStartListener (listener) {
-    this._ensureListener();
-    this._listener.start = listener;
-},
+jsbSkeleton.prototype.setStartListener = function (listener) {
+    this._startListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setStartListener(listener);
+    }
+}
 
-/**
- * !#en Set the interrupt event listener.
- * !#zh 用来设置动画被打断的事件监听。
- * @method setInterruptListener
- * @param {function} listener
- */
-setInterruptListener (listener) {
-    this._ensureListener();
-    this._listener.interrupt = listener;
-},
+jsbSkeleton.prototype.setInterruptListener = function (listener) {
+    this._interruptListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setInterruptListener(listener);
+    }
+}
 
-/**
- * !#en Set the end event listener.
- * !#zh 用来设置动画播放完后的事件监听。
- * @method setEndListener
- * @param {function} listener
- */
-setEndListener (listener) {
-    this._ensureListener();
-    this._listener.end = listener;
-},
+jsbSkeleton.prototype.setEndListener = function (listener) {
+    this._endListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setEndListener(listener);
+    }
+}
 
-/**
- * !#en Set the dispose event listener.
- * !#zh 用来设置动画将被销毁的事件监听。
- * @method setDisposeListener
- * @param {function} listener
- */
-setDisposeListener (listener) {
-    this._ensureListener();
-    this._listener.dispose = listener;
-},
+jsbSkeleton.prototype.setDisposeListener = function (listener) {
+    this._disposeListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setDisposeListener(listener);
+    }
+}
 
-/**
- * !#en Set the complete event listener.
- * !#zh 用来设置动画播放一次循环结束后的事件监听。
- * @method setCompleteListener
- * @param {function} listener
- */
-setCompleteListener (listener) {
-    this._ensureListener();
-    this._listener.complete = listener;
-},
+jsbSkeleton.prototype.setCompleteListener = function (listener) {
+    this._completeListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setCompleteListener(listener);
+    }
+}
 
-/**
- * !#en Set the animation event listener.
- * !#zh 用来设置动画播放过程中帧事件的监听。
- * @method setEventListener
- * @param {function} listener
- */
-setEventListener (listener) {
-    this._ensureListener();
-    this._listener.event = listener;
+jsbSkeleton.prototype.setEventListener = function (listener) {
+    this._eventListener = listener;
+    if (this._skeleton) {
+        this._skeleton.setEventListener(listener);
+    }
+}
+
+jsbSkeleton.prototype.setTrackStartListener = function (entry, listener) {
+    if (this._skeleton) {
+        this._skeleton.setTrackStartListener(entry, listener);
+    }
 },
 
 /**
