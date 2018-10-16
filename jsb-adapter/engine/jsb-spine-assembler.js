@@ -22,13 +22,13 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
-const StencilManager = require('../../cocos2d/core/renderer/webgl/stencil-manager').sharedManager;
-const Skeleton = require('./Skeleton');
-const spine = require('./lib/spine');
-const renderer = require('../../cocos2d/core/renderer');
-const RenderFlow = require('../../cocos2d/core/renderer/render-flow');
-const vfmtPosUvColor = require('../../cocos2d/core/renderer/webgl/vertex-format').vfmtPosUvColor;
+// !!! h5 engine need exports cc.StencilManager,now direct modify cocos2d-jsb.js file to export it
+const StencilManager = cc.StencilManager.sharedManager;
+const Skeleton = sp.Skeleton;
+const renderer = cc.renderer;
+const RenderFlow = cc.RenderFlow;
+// !!! h5 engine need exports cc.VertexFormat,now direct modify cocos2d-jsb.js file to export it
+const vfmtPosUvColor = cc.VertexFormat.vfmtPosUvColor;
 const renderEngine = renderer.renderEngine;
 const gfx = renderEngine.gfx;
 const SpriteMaterial = renderEngine.SpriteMaterial;
@@ -50,27 +50,8 @@ function _updateKeyWithStencilRef (key, stencilRef) {
     return key.replace(/@\d+$/, STENCIL_SEP + stencilRef);
 }
 
-function _getSlotMaterial (slot, tex, premultiAlpha) {
-    let src, dst;
-    switch (slot.data.blendMode) {
-        case spine.BlendMode.Additive:
-            src = premultiAlpha ? cc.macro.ONE : cc.macro.SRC_ALPHA;
-            dst = cc.macro.ONE;
-            break;
-        case spine.BlendMode.Multiply:
-            src = cc.macro.DST_COLOR;
-            dst = cc.macro.ONE_MINUS_SRC_ALPHA;
-            break;
-        case spine.BlendMode.Screen:
-            src = cc.macro.ONE;
-            dst = cc.macro.ONE_MINUS_SRC_COLOR;
-            break;
-        case spine.BlendMode.Normal:
-        default:
-            src = premultiAlpha ? cc.macro.ONE : cc.macro.SRC_ALPHA;
-            dst = cc.macro.ONE_MINUS_SRC_ALPHA;
-            break;
-    }
+function _getSlotMaterial (slot, tex) {
+    let src=slot.blendStr, dst=slot.blendStr;
 
     let key = tex.url + src + dst + STENCIL_SEP + '0';
     let material = _sharedMaterials[key];
@@ -99,26 +80,24 @@ function _getSlotMaterial (slot, tex, premultiAlpha) {
     return material;
 }
 
-var spineAssembler = sp.Skeleton._assembler;
-spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipliedAlpha, renderData, dataOffset) {
+var spineAssembler = {
+    // Use model to avoid per vertex transform
+    useModel: true,
+
+    _readAttachmentData (comp, slot, renderData, dataOffset) {
         // the vertices in format:
         // X1, Y1, C1R, C1G, C1B, C1A, U1, V1
         // get the vertex data
-        let vertices = attachment.updateWorldVertices(slot, premultipliedAlpha);
+        let vertices = slot.vertexArray;
         let vertexCount = vertices.length / 8;
         // augment render data size to ensure capacity
         renderData.dataLength += vertexCount;
         let data = renderData._data;
-        let nodeColor = comp.node._color;
-        let nodeR = nodeColor.r,
-            nodeG = nodeColor.g,
-            nodeB = nodeColor.b,
-            nodeA = nodeColor.a;
         for (let i = 0, n = vertices.length; i < n; i += 8) {
-            let r = vertices[i + 2] * nodeR,
-                g = vertices[i + 3] * nodeG,
-                b = vertices[i + 4] * nodeB,
-                a = vertices[i + 5] * nodeA;
+            let r = vertices[i + 2],
+                g = vertices[i + 3],
+                b = vertices[i + 4],
+                a = vertices[i + 5];
             let color = ((a<<24) >>> 0) + (b<<16) + (g<<8) + r;
             let content = data[dataOffset];
             content.x = vertices[i];
@@ -166,27 +145,16 @@ spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipl
         let material = null, currMaterial = null;
         let vertexCount = 0, vertexOffset = 0;
         let indiceCount = 0, indiceOffset = 0;
-        for (let i = 0, n = locSkeleton.drawOrder.length; i < n; i++) {
-            slot = locSkeleton.drawOrder[i];
-            if (!slot.attachment)
-                continue;
-            attachment = slot.attachment;
-            isMesh = (attachment instanceof spine.MeshAttachment);
-            isRegion = (attachment instanceof spine.RegionAttachment);
+
+        let jsbRenderData = locSkeleton.getRenderData(comp.node._color,premultiAlpha,comp.debugBones);
+        let jsbSlots = jsbRenderData.getSlots();
+
+        for (let i = 0, n = jsbSlots.length; i < n; i++) {
+            slot = jsbSlots[i];
 
             // get the vertices length
-            vertexCount = 0;
-            if (isRegion) {
-                vertexCount = 4;
-                indiceCount = 6;
-            }
-            else if (isMesh) {
-                vertexCount = attachment.regionUVs.length / 2;
-                indiceCount = attachment.triangles.length;
-            }
-            else {
-                continue;
-            }
+            vertexCount = slot.vertexArray.length;
+            indiceCount = slot.indexArray.length;
 
             // no vertices to render
             if (vertexCount === 0) {
@@ -194,7 +162,7 @@ spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipl
             }
 
             newData = false;
-            material = _getSlotMaterial(slot, attachment.region.texture._texture, premultiAlpha);
+            material = _getSlotMaterial(slot, slot.texture);
             if (!material) {
                 continue;
             }
@@ -239,14 +207,14 @@ spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipl
                 indices[indiceOffset + 4] = vertexOffset + 2;
                 indices[indiceOffset + 5] = vertexOffset + 3;
             } else {
-                let triangles = attachment.triangles;
+                let triangles = slot.indexArray;
                 for (let t = 0; t < triangles.length; t++) {
                     indices[indiceOffset + t] = vertexOffset + triangles[t];
                 }
             }
             indiceOffset += indiceCount;
             // Fill up vertex render data
-            vertexOffset += this._readAttachmentData(comp, attachment, slot, premultiAlpha, data, vertexOffset);
+            vertexOffset += this._readAttachmentData(comp, slot, data, vertexOffset);
         }
 
         data.vertexCount = vertexOffset;
@@ -260,23 +228,23 @@ spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipl
         }
 
         if (comp.debugBones) {
+            let jsbDebugBones = jsbRenderData.getDebugBones();
             let bone;
             graphics.lineWidth = 5;
             graphics.strokeColor = _boneColor;
             graphics.fillColor = _slotColor; // Root bone color is same as slot color.
 
-            for (let i = 0, n = locSkeleton.bones.length; i < n; i++) {
-                bone = locSkeleton.bones[i];
-                let x = bone.data.length * bone.a + bone.worldX;
-                let y = bone.data.length * bone.c + bone.worldY;
+            for (let i = 0, n = jsbDebugBones.length; i < n; i+=4) {
+                let x = jsbDebugBones[i+2];
+                let y = jsbDebugBones[i+3];
 
                 // Bone lengths.
-                graphics.moveTo(bone.worldX, bone.worldY);
+                graphics.moveTo(jsbDebugBones[i], jsbDebugBones[i+1]);
                 graphics.lineTo(x, y);
                 graphics.stroke();
 
                 // Bone origins.
-                graphics.circle(bone.worldX, bone.worldY, Math.PI * 2);
+                graphics.circle(jsbDebugBones[i], jsbDebugBones[i+1], Math.PI * 2);
                 graphics.fill();
                 if (i === 0) {
                     graphics.fillColor = _originColor;
@@ -358,5 +326,3 @@ spineAssembler._readAttachmentData = function(comp, attachment, slot, premultipl
 };
 
 Skeleton._assembler = spineAssembler;
-
-module.exports = spineAssembler;
