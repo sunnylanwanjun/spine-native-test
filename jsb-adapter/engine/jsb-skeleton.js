@@ -27,8 +27,6 @@
 var jsbSkeleton = sp.Skeleton.prototype;
 jsbSkeleton.setSkeletonData = function (skeletonData) {
     null != skeletonData.width && null != skeletonData.height && this.node.setContentSize(skeletonData.width, skeletonData.height);
-    
-    console.log(">>>>>>>>>>>>>>>>>>>",skeletonData.nativeUrl,skeletonData.width,skeletonData.height);
 
     // jsb
     var uuid = skeletonData._uuid;
@@ -51,9 +49,13 @@ jsbSkeleton.setSkeletonData = function (skeletonData) {
     var textures = {};
     for (var i = 0; i < texValues.length; ++i) {
         var spTex = new jsbspine.Texture2D();
-        spTex.setJSTex(texValues[i]);
+        spTex.setRealTextureIndex(i);
         spTex.setPixelsWide(texValues[i].width);
         spTex.setPixelsHigh(texValues[i].height);
+        spTex.setTexParamCallback(function(texIdx,minFilter,magFilter,wrapS,warpT){
+            texValues[texIdx].setFilters(minFilter, magFilter);
+            texValues[texIdx].setWrapMode(wrapS, warpT);
+        }.bind(this));
         textures[texKeys[i]] = spTex;
     }
 

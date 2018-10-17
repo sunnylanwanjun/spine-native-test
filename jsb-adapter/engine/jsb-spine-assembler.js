@@ -50,8 +50,7 @@ function _updateKeyWithStencilRef (key, stencilRef) {
     return key.replace(/@\d+$/, STENCIL_SEP + stencilRef);
 }
 
-function _getSlotMaterial (slot, tex) {
-    let src=slot.blendStr, dst=slot.blendDst;
+function _getSlotMaterial (src, dst, tex) {
 
     let key = tex.url + src + dst + STENCIL_SEP + '0';
     let material = _sharedMaterials[key];
@@ -84,41 +83,47 @@ var spineAssembler = {
     // Use model to avoid per vertex transform
     useModel: true,
 
-    _readAttachmentData (comp, slot, renderData, dataOffset) {
+    _readAttachmentData (comp, slotsReader, vertexCount, renderData, dataOffset) {
         // the vertices in format:
         // X1, Y1, C1R, C1G, C1B, C1A, U1, V1
         // get the vertex data
-        let vertices = slot.vertexArray;
-        let vertexCount = vertices.length / 8;
         // augment render data size to ensure capacity
         renderData.dataLength += vertexCount;
         let data = renderData._data;
-        for (let i = 0, n = vertices.length; i < n; i += 8) {
-            let r = vertices[i + 2],
-                g = vertices[i + 3],
-                b = vertices[i + 4],
-                a = vertices[i + 5];
-            let color = ((a<<24) >>> 0) + (b<<16) + (g<<8) + r;
+
+        for (let i = 0; i < vertexCount; i++) {
+            
             let content = data[dataOffset];
-            content.x = vertices[i];
-            content.y = vertices[i + 1];
+            content.x = slotsReader.getFloat32();
+            content.y = slotsReader.getFloat32();
+            //z ignore
+            slotsReader.getFloat32();
+
+            let r = slotsReader.getUint8(),
+                g = slotsReader.getUint8(),
+                b = slotsReader.getUint8(),
+                a = slotsReader.getUint8()
+            let color = ((a<<24) >>> 0) + (b<<16) + (g<<8) + r;
             content.color = color;
-            content.u = vertices[i + 6];
-            content.v = vertices[i + 7];
+
+            content.u = slotsReader.getFloat32();
+            content.v = slotsReader.getFloat32();
+
             dataOffset++;
         }
 
         if (comp.debugSlots && vertexCount === 4) {
+            let debugIdx = dataOffset - vertexCount;
             let graphics = comp._debugRenderer;
 
             // Debug Slot
             let VERTEX = spine.RegionAttachment;
             graphics.strokeColor = _slotColor;
             graphics.lineWidth = 5;
-            graphics.moveTo(vertices[VERTEX.X1], vertices[VERTEX.Y1]);
-            graphics.lineTo(vertices[VERTEX.X2], vertices[VERTEX.Y2]);
-            graphics.lineTo(vertices[VERTEX.X3], vertices[VERTEX.Y3]);
-            graphics.lineTo(vertices[VERTEX.X4], vertices[VERTEX.Y4]);
+            graphics.moveTo(data[debugIdx+VERTEX.X1], data[debugIdx+VERTEX.Y1]);
+            graphics.lineTo(data[debugIdx+VERTEX.X2], data[debugIdx+VERTEX.Y2]);
+            graphics.lineTo(data[debugIdx+VERTEX.X3], data[debugIdx+VERTEX.Y3]);
+            graphics.lineTo(data[debugIdx+VERTEX.X4], data[debugIdx+VERTEX.Y4]);
             graphics.close();
             graphics.stroke();
         }
@@ -135,7 +140,7 @@ var spineAssembler = {
             graphics.clear();
         }
 
-        let attachment, slot, isMesh, isRegion;
+        let attachment, slot, isMesh, isRegion, realTexture, realTextureIndex,blendSrc,blendDst;
         let dataId = 0, datas = comp._renderDatas, data = datas[dataId], newData = false;
         if (!data) {
             data = datas[dataId] = comp.requestRenderData();
@@ -147,14 +152,22 @@ var spineAssembler = {
         let indiceCount = 0, indiceOffset = 0;
 
         let jsbRenderData = locSkeleton.getRenderData(comp.node._color,premultiAlpha,comp.debugBones);
-        let jsbSlots = jsbRenderData.getSlots();
+        let slotsLen = jsbRenderData.getSlotsLen();
+        let bonesLen = jsbRenderData.getBonesLen();
+        let slotsBuffer = jsbRenderData.getSlots();
 
-        for (let i = 0, n = jsbSlots.length; i < n; i++) {
-            slot = jsbSlots[i];
-            if(!slot)continue;
+        let slotsReader = new DataView(slotsBuffer,0,slotsBuffer.byteLength);
+
+        for (let i = 0, n = slotsLen; i < n; i++) {
+            realTextureIndex = slotsReader.getUint32();
+            realTexture = comp.skeletonData.textures[realTextureIndex];
+
+            blendSrc = slotsReader.getUint32();
+            blendDst = slotsReader.getUint32();
+
             // get the vertices length
-            vertexCount = slot.vertexArray.length;
-            indiceCount = slot.indexArray.length;
+            indiceCount = slotsReader.getUint32();
+            vertexCount = slotsReader.getUint32();
 
             // no vertices to render
             if (vertexCount === 0) {
@@ -162,7 +175,8 @@ var spineAssembler = {
             }
 
             newData = false;
-            material = _getSlotMaterial(slot, slot.texture);
+            
+            material = _getSlotMaterial(blendSrc, blendDst, realTexture);
             if (!material) {
                 continue;
             }
@@ -207,9 +221,9 @@ var spineAssembler = {
                 indices[indiceOffset + 4] = vertexOffset + 2;
                 indices[indiceOffset + 5] = vertexOffset + 3;
             } else {
-                let triangles = slot.indexArray;
-                for (let t = 0; t < triangles.length; t++) {
-                    indices[indiceOffset + t] = vertexOffset + triangles[t];
+                for (let t = 0; t < indiceCount; t++) {
+                    var indexVal = slotsReader.getUint16();
+                    indices[indiceOffset + t] = vertexOffset + indexVal;
                 }
             }
             indiceOffset += indiceCount;
@@ -227,24 +241,24 @@ var spineAssembler = {
             datas.length = dataId;
         }
 
-        if (comp.debugBones) {
-            let jsbDebugBones = jsbRenderData.getDebugBones();
-            let bone;
+        if (comp.debugBones && bonesLen>0) {
             graphics.lineWidth = 5;
             graphics.strokeColor = _boneColor;
             graphics.fillColor = _slotColor; // Root bone color is same as slot color.
 
-            for (let i = 0, n = jsbDebugBones.length; i < n; i+=4) {
-                let x = jsbDebugBones[i+2];
-                let y = jsbDebugBones[i+3];
+            for (let i = 0, n = bonesLen; i < n; i+=4) {
+                let bx = slotsReader.getFloat32();
+                let by = slotsReader.getFloat32();
+                let x = slotsReader.getFloat32();
+                let y = slotsReader.getFloat32();
 
                 // Bone lengths.
-                graphics.moveTo(jsbDebugBones[i], jsbDebugBones[i+1]);
+                graphics.moveTo(bx, by);
                 graphics.lineTo(x, y);
                 graphics.stroke();
 
                 // Bone origins.
-                graphics.circle(jsbDebugBones[i], jsbDebugBones[i+1], Math.PI * 2);
+                graphics.circle(bx, by, Math.PI * 2);
                 graphics.fill();
                 if (i === 0) {
                     graphics.fillColor = _originColor;
