@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
-            timestampString = "561448713.0874569"
+            timestampString = "561460009.68142"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/scripting/js-bindings/manual/jsb_spine_manual.cpp"
-            timestampString = "561448713.0875469"
+            timestampString = "561460009.6815259"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "444"
-            endingLineNumber = "444"
+            startingLineNumber = "463"
+            endingLineNumber = "463"
             landmarkName = "js_register_cocos2dx_spine_SkeletonRenderData(se::Object* obj)"
             landmarkType = "9">
          </BreakpointContent>
@@ -106,7 +106,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/spine-cocos2dx.cpp"
-            timestampString = "561448713.0876909"
+            timestampString = "561460009.681682"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "96"
@@ -122,11 +122,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderData.cpp"
-            timestampString = "561448713.0877531"
+            timestampString = "561460009.681746"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137">
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "SkeletonRenderData::reset()"
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -168,7 +170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
-            timestampString = "561448713.088039"
+            timestampString = "561460009.6818171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "188"
@@ -184,7 +186,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/spine-adapter.cpp"
-            timestampString = "561448713.088098"
+            timestampString = "561460009.68189"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
@@ -200,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
-            timestampString = "561448713.088148"
+            timestampString = "561460009.6819431"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "190"
@@ -216,13 +218,109 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/scripting/js-bindings/manual/jsb_creator_manual.cpp"
-            timestampString = "561448713.088197"
+            timestampString = "561460009.682005"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "67"
             endingLineNumber = "67"
             landmarkName = "js_creator_sp_initSkeletonRenderer(se::State&amp; s)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
+            timestampString = "561460009.682056"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "SkeletonRenderer::getRenderData(Color4B nodeColor,bool premultipliedAlpha,bool debugBones)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
+            timestampString = "561460009.682115"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
+            landmarkName = "SkeletonRenderer::getRenderData(Color4B nodeColor,bool premultipliedAlpha,bool debugBones)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderer.cpp"
+            timestampString = "561460009.682168"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "SkeletonRenderer::getRenderData(Color4B nodeColor,bool premultipliedAlpha,bool debugBones)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderData.cpp"
+            timestampString = "561460009.6822129"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "SkeletonRenderData::writeUInt32(uint32_t val)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/scripting/js-bindings/jswrapper/jsc/Object.mm"
+            timestampString = "561460009.682268"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "Object::createArrayBufferObject(void* data, size_t byteLength)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../../../cocos2d-x-lite/cocos2d-x-lite/cocos/editor-support/spine/jsb/SkeletonRenderData.cpp"
+            timestampString = "561460009.682616"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "SkeletonRenderData::getSlots()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -82,6 +82,7 @@ function _getSlotMaterial (src, dst, tex) {
 var spineAssembler = {
     // Use model to avoid per vertex transform
     useModel: true,
+    readPos: 0,
 
     _readAttachmentData (comp, slotsReader, vertexCount, renderData, dataOffset) {
         // the vertices in format:
@@ -94,20 +95,29 @@ var spineAssembler = {
         for (let i = 0; i < vertexCount; i++) {
             
             let content = data[dataOffset];
-            content.x = slotsReader.getFloat32();
-            content.y = slotsReader.getFloat32();
+            content.x = slotsReader.getFloat32(this.readPos,true);
+            this.readPos+=4;
+            content.y = slotsReader.getFloat32(this.readPos,true);
+            this.readPos+=4;
             //z ignore
-            slotsReader.getFloat32();
+            slotsReader.getFloat32(this.readPos,true);
+            this.readPos+=4;
 
-            let r = slotsReader.getUint8(),
-                g = slotsReader.getUint8(),
-                b = slotsReader.getUint8(),
-                a = slotsReader.getUint8()
+            let r = slotsReader.getUint8(this.readPos,true);
+            this.readPos+=1;
+            let g = slotsReader.getUint8(this.readPos,true);
+            this.readPos+=1;
+            let b = slotsReader.getUint8(this.readPos,true);
+            this.readPos+=1;
+            let a = slotsReader.getUint8(this.readPos,true);
+            this.readPos+=1;
             let color = ((a<<24) >>> 0) + (b<<16) + (g<<8) + r;
             content.color = color;
 
-            content.u = slotsReader.getFloat32();
-            content.v = slotsReader.getFloat32();
+            content.u = slotsReader.getFloat32(this.readPos,true);
+            this.readPos+=4;
+            content.v = slotsReader.getFloat32(this.readPos,true);
+            this.readPos+=4;
 
             dataOffset++;
         }
@@ -156,24 +166,28 @@ var spineAssembler = {
         let bonesLen = jsbRenderData.getBonesLen();
         let slotsBuffer = jsbRenderData.getSlots();
 
-        let slotsReader = new DataView(slotsBuffer,0,slotsBuffer.byteLength);
-
+        let slotsReader = new DataView(slotsBuffer);
+        this.readPos = 0;
+        
         for (let i = 0, n = slotsLen; i < n; i++) {
-            realTextureIndex = slotsReader.getUint32();
+            realTextureIndex = slotsReader.getUint32(this.readPos,true);
+            this.readPos+=4;
             realTexture = comp.skeletonData.textures[realTextureIndex];
 
-            blendSrc = slotsReader.getUint32();
-            blendDst = slotsReader.getUint32();
+            blendSrc = slotsReader.getUint32(this.readPos,true);
+            this.readPos+=4;
+            blendDst = slotsReader.getUint32(this.readPos,true);
+            this.readPos+=4;
 
             // get the vertices length
-            indiceCount = slotsReader.getUint32();
-            vertexCount = slotsReader.getUint32();
-
+            indiceCount = slotsReader.getUint32(this.readPos,true);
+            this.readPos+=4;
+            vertexCount = slotsReader.getUint32(this.readPos,true);
+            this.readPos+=4;
             // no vertices to render
             if (vertexCount === 0) {
                 continue;
             }
-
             newData = false;
             
             material = _getSlotMaterial(blendSrc, blendDst, realTexture);
@@ -222,13 +236,15 @@ var spineAssembler = {
                 indices[indiceOffset + 5] = vertexOffset + 3;
             } else {
                 for (let t = 0; t < indiceCount; t++) {
-                    var indexVal = slotsReader.getUint16();
+                    var indexVal = slotsReader.getUint16(this.readPos,true);
+                    this.readPos+=2;
                     indices[indiceOffset + t] = vertexOffset + indexVal;
                 }
             }
             indiceOffset += indiceCount;
             // Fill up vertex render data
-            vertexOffset += this._readAttachmentData(comp, slot, data, vertexOffset);
+
+            vertexOffset += this._readAttachmentData(comp, slotsReader, vertexCount, data, vertexOffset);
         }
 
         data.vertexCount = vertexOffset;
@@ -247,10 +263,14 @@ var spineAssembler = {
             graphics.fillColor = _slotColor; // Root bone color is same as slot color.
 
             for (let i = 0, n = bonesLen; i < n; i+=4) {
-                let bx = slotsReader.getFloat32();
-                let by = slotsReader.getFloat32();
-                let x = slotsReader.getFloat32();
-                let y = slotsReader.getFloat32();
+                let bx = slotsReader.getFloat32(this.readPos,true);
+                this.readPos+=4;
+                let by = slotsReader.getFloat32(this.readPos,true);
+                this.readPos+=4;
+                let x = slotsReader.getFloat32(this.readPos,true);
+                this.readPos+=4;
+                let y = slotsReader.getFloat32(this.readPos,true);
+                this.readPos+=4;
 
                 // Bone lengths.
                 graphics.moveTo(bx, by);

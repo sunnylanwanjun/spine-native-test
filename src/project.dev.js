@@ -836,8 +836,7 @@ window.__require = function e(t, n, r) {
         }
       };
       TestSpineScene.prototype.addRole = function(roleNodes) {
-                   var index = 5;
-        //for (var index = 0; index < roleNodes.length; index++) {
+        for (var index = 0; index < roleNodes.length; index++) {
           var element = roleNodes[index];
           var node = cc.instantiate(element);
           var roleView = node.getComponent(RoleView_1.default);
@@ -848,7 +847,7 @@ window.__require = function e(t, n, r) {
           } else cc.log("1111111111");
           node.position = new cc.Vec2();
           this.roleLayer.addChild(node);
-        //}
+        }
       };
       __decorate([ property(cc.Node) ], TestSpineScene.prototype, "roleLayer", void 0);
       __decorate([ property(cc.Node) ], TestSpineScene.prototype, "roleNodeNew", void 0);
