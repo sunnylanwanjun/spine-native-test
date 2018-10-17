@@ -43324,7 +43324,7 @@
       };
       StencilManager.sharedManager = new StencilManager();
       StencilManager.Stage = Stage;
-      module.exports = StencilManager;
+      cc.StencilManager = module.exports = StencilManager;
     }), {
       "../render-engine": 214
     } ],
@@ -43382,7 +43382,7 @@
         normalize: true
       } ]);
       vfmtPosColor.name = "vfmtPosColor";
-      module.exports = {
+      cc.VertexFormat = module.exports = {
         vfmt3D: vfmt3D,
         vfmtPosUvColor: vfmtPosUvColor,
         vfmtPosUv: vfmtPosUv,

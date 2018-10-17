@@ -192,6 +192,7 @@ if (false) {
 else if (window.jsb) {
     require('src/settings.js');
     require('src/cocos2d-jsb.js');
+    console.log("******************* require index js file ********************");
     require('jsb-adapter/engine/index.js');
     window.boot();
 }

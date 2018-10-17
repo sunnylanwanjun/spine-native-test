@@ -51,7 +51,7 @@ function _updateKeyWithStencilRef (key, stencilRef) {
 }
 
 function _getSlotMaterial (slot, tex) {
-    let src=slot.blendStr, dst=slot.blendStr;
+    let src=slot.blendStr, dst=slot.blendDst;
 
     let key = tex.url + src + dst + STENCIL_SEP + '0';
     let material = _sharedMaterials[key];
@@ -151,7 +151,7 @@ var spineAssembler = {
 
         for (let i = 0, n = jsbSlots.length; i < n; i++) {
             slot = jsbSlots[i];
-
+            if(!slot)continue;
             // get the vertices length
             vertexCount = slot.vertexArray.length;
             indiceCount = slot.indexArray.length;
